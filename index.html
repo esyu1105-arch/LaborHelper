@@ -1,0 +1,511 @@
+<!DOCTYPE html>
+<html lang="zh-HK">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>婚禮聯合作戰指揮部</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Noto+Sans+TC:wght@400;500;700;900&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', 'Noto Sans TC', sans-serif;
+            background-color: #f8fafc; /* bg-slate-50 */
+        }
+        .custom-scrollbar::-webkit-scrollbar {
+            height: 4px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: #f1f1f1;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 2px;
+        }
+        /* Real-time active highlighted task card */
+        .task-active {
+            border-color: #e11d48 !important; /* rose-600 */
+            background-color: #fff1f2 !important; /* rose-50 */
+            box-shadow: 0 4px 12px rgba(225, 29, 72, 0.12), 0 0 0 2px rgba(225, 29, 72, 0.15);
+            transform: scale(1.02);
+            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+    </style>
+</head>
+<body class="text-slate-800 min-h-screen pb-16">
+
+    <!-- Header Section -->
+    <header class="bg-white/90 backdrop-blur-md sticky top-0 z-50 shadow-sm border-b border-slate-200">
+        <div class="max-w-md mx-auto px-4 py-3 flex items-center justify-between">
+            <div class="flex items-center gap-3">
+                <div class="bg-rose-100 p-2 rounded-xl text-rose-600 border border-rose-200">
+                    <i class="fa-solid fa-shield-heart text-lg"></i>
+                </div>
+                <div>
+                    <!-- Click title 3 times to open debug time simulator -->
+                    <h1 id="app-title" class="font-bold text-base leading-tight text-slate-800 active:opacity-50 select-none">婚禮聯合作戰指揮部</h1>
+                    <p class="text-[10px] text-slate-500 font-medium">Manessa & Adrian (24 May 2026)</p>
+                </div>
+            </div>
+            <div class="text-right">
+                <span class="bg-rose-50 text-rose-700 px-2 py-0.5 rounded-md text-[10px] font-black border border-rose-100 tracking-wider">
+                    PWA LIVE
+                </span>
+            </div>
+        </div>
+    </header>
+
+    <main class="max-w-md mx-auto px-4 mt-4 space-y-5">
+
+        <!-- Real-time Status Dashboard -->
+        <div class="bg-white rounded-2xl p-4 shadow-sm border border-slate-200 relative overflow-hidden">
+            <div class="absolute -right-4 -top-4 opacity-5 text-rose-950 text-9xl pointer-events-none">
+                <i class="fa-solid fa-clock"></i>
+            </div>
+            
+            <div class="relative z-10">
+                <div class="flex justify-between items-end mb-3">
+                    <div>
+                        <p class="text-[10px] font-bold uppercase tracking-wider text-slate-400 mb-0.5">當前香港時間 (HKT)</p>
+                        <div id="live-clock" class="text-3xl font-black text-slate-800 tracking-tight tabular-nums">--:--:--</div>
+                    </div>
+                    <div class="text-right">
+                        <p class="text-[10px] font-bold uppercase tracking-wider text-slate-400 mb-0.5">全日進度 (06:45-23:30)</p>
+                        <div id="progress-percentage" class="text-lg font-bold text-rose-600">0%</div>
+                    </div>
+                </div>
+
+                <!-- Live Progress Bar -->
+                <div class="w-full bg-slate-100 h-2.5 rounded-full overflow-hidden mb-4 relative shadow-inner">
+                    <div id="time-progress-bar" class="bg-gradient-to-r from-rose-500 to-pink-500 h-full w-0 transition-all duration-1000 ease-linear"></div>
+                </div>
+                
+                <div class="bg-slate-50 border border-slate-100 rounded-xl p-3 flex items-center justify-between">
+                    <div class="flex items-center gap-2">
+                        <span class="relative flex h-3 w-3">
+                            <span id="active-ping" class="animate-ping absolute inline-flex h-full w-full rounded-full bg-rose-400 opacity-75 hidden"></span>
+                            <span id="active-dot" class="relative inline-flex rounded-full h-3 w-3 bg-slate-300"></span>
+                        </span>
+                        <span class="text-xs font-bold text-slate-600">當前指令 :</span>
+                    </div>
+                    <span id="current-task-status" class="text-xs font-black text-slate-400 truncate max-w-[180px] text-right">等待大日子降臨...</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Crew Selector Buttons (Horizontal Scroll) -->
+        <div class="space-y-2">
+            <p class="text-[10px] font-bold uppercase tracking-wider text-slate-400">請選擇作戰人員 (CREW)</p>
+            <div class="flex gap-1.5 overflow-x-auto pb-1 custom-scrollbar snap-x">
+                <button onclick="switchCrew('chun')" id="crew-chun" class="crew-btn shrink-0 px-4 py-2.5 text-xs font-black rounded-xl transition-all snap-start shadow-sm border">
+                    春雨 (後勤)
+                </button>
+                <button onclick="switchCrew('brother')" id="crew-brother" class="crew-btn shrink-0 px-4 py-2.5 text-xs font-black rounded-xl transition-all snap-start shadow-sm border">
+                    細佬 (交通)
+                </button>
+                <button onclick="switchCrew('wing')" id="crew-wing" class="crew-btn shrink-0 px-4 py-2.5 text-xs font-black rounded-xl transition-all snap-start shadow-sm border">
+                    Wing (伴郎)
+                </button>
+                <button onclick="switchCrew('ding')" id="crew-ding" class="crew-btn shrink-0 px-4 py-2.5 text-xs font-black rounded-xl transition-all snap-start shadow-sm border">
+                    丁丁 (控時)
+                </button>
+                <button onclick="switchCrew('willson')" id="crew-willson" class="crew-btn shrink-0 px-4 py-2.5 text-xs font-black rounded-xl transition-all snap-start shadow-sm border">
+                    Willson (後勤)
+                </button>
+            </div>
+        </div>
+
+        <!-- ================= TIMELINE CONTAINER ================= -->
+        <div class="relative pl-5 space-y-6 border-l-2 border-rose-100 ml-2 mt-4" id="timeline-container">
+            <!-- Timeline elements will be automatically rendered/toggled via JS -->
+        </div>
+
+        <!-- Global Bottom Notes -->
+        <div class="bg-slate-800 text-slate-100 p-4 rounded-2xl shadow-md space-y-2 mt-6">
+            <h3 class="font-bold text-xs uppercase tracking-wider text-rose-400 flex items-center gap-1.5">
+                <i class="fa-solid fa-triangle-exclamation"></i> 指揮部核心監管安全提示
+            </h3>
+            <ul class="text-[11px] space-y-1.5 text-slate-300">
+                <li class="flex items-start gap-1.5">
+                    <span class="text-rose-400 font-bold">•</span>
+                    <span><strong>監管鏈 A (金器人情) :</strong> 由 <strong>春雨、細佬、丁丁</strong> 共同看守。22:45 準時於送客後收集劉媽媽金器，必須親手交予劉媽媽。</span>
+                </li>
+                <li class="flex items-start gap-1.5">
+                    <span class="text-rose-400 font-bold">•</span>
+                    <span><strong>監管鏈 B (儀式物資) :</strong> 由 伴郎 <strong>Wing</strong> 貼身保管：戒指、證書、迷你保險箱、誓詞卡及 Mofusand 公仔。</span>
+                </li>
+            </ul>
+        </div>
+
+    </main>
+
+    <!-- Raw Data Storage inside Script to render dynamically -->
+    <script>
+        const CREW_DATA = {
+            chun: {
+                name: "春雨 (春)",
+                title: "後勤、接待與財物監管",
+                color: "rose",
+                tips: [
+                    "全日多次涉及搬運，必須穿著舒適的鞋子。",
+                    "晚宴接待預計到 20:30 收工入席，19:15 後請留意女家簽到情況。"
+                ],
+                timeline: [
+                    { start: "09:00", end: "10:55", title: "個人行李上車", desc: "協助將新人個人行李、衣物安全送上花車。", tag: "重物擔當" },
+                    { start: "10:55", end: "11:15", title: "酒店出門房清場", desc: "與 Willson 合作進行出門房清場（僅清除新人佈置，酒店物品不動）。", tag: "細節執行" },
+                    { start: "11:15", end: "12:00", title: "搬運物資出發", desc: "清場後迅速將物資搬運上車，準備向順風圍出發。" },
+                    { start: "12:00", end: "13:00", title: "「醫肚團隊」午餐安排", desc: "負責處理並分配工作人員與兄弟姊妹的午餐事宜。", tag: "後勤補給" },
+                    { start: "13:00", end: "14:10", title: "Zone A (嫲嫲屋) 清理 & 休息", desc: "拜神入門完結後，協助清理嫲嫲屋企臨時物資，隨後休息。" },
+                    { start: "14:10", end: "15:00", title: "搬運物資到 27座接駁車", desc: "與 Wing、Willson 將順風圍所有物資安全搬運到接駁車位置。", tag: "體力活" },
+                    { start: "15:00", end: "16:00", title: "物資進場 & 回禮交收", desc: "抵達 M+ 全員搬運物資進「璞」。與 Willson 將回禮交給 Joel，確保特定的房屋裝飾移走。" },
+                    { start: "16:00", end: "17:00", title: "迎賓區 Set-up 佈置", desc: "在「丁丁」的指揮下與 Wing 共同負責佈置迎賓位置。", tag: "佈置組" },
+                    { start: "17:00", end: "17:30", title: "Reception Standby 迎賓", desc: "進入接待處工作崗位，準備迎接證婚來賓。" },
+                    { start: "17:30", end: "18:15", title: "證婚儀式 Recep 支援", desc: "證婚儀式期間堅守接待處，為遲到賓客簽到、領位並保管人情。" },
+                    { start: "18:15", end: "18:30", title: "搬移花環拱門", desc: "證婚禮成後，與 Wing 指導工作人員將拱門安全移往迎賓位置，確保掛牌無損。" },
+                    { start: "18:45", end: "19:15", title: "晚宴迎賓 Reception", desc: "在接待處當值，負責引導迎賓晚宴期間到場的賓客。" },
+                    { start: "19:15", end: "19:30", title: "支援女家簽到", desc: "如女家接待處人手緊張，隨時切換角色協助女家賓客簽到及指引座位。" },
+                    { start: "19:30", end: "20:30", title: "維持接待處運作", desc: "接待處當值至首道菜上桌（約 20:30），保障迎賓秩序。" },
+                    { start: "20:30", end: "21:30", title: "Recep 關站 & 鎖入新娘房", desc: "與細佬將入口處物資整理，鎖進新娘房保障安全。", tag: "財物安全" },
+                    { start: "21:30", end: "22:40", title: "入席食飯 / 敬酒 Standby", desc: "入席吃飯，並於 21:30 敬酒環節前準時到位 Standby 走位。" },
+                    { start: "22:40", end: "22:45", title: "送客分流引導", desc: "維持門口秩序，指引賓客離開並確認接駁巴士就緒。" },
+                    { start: "22:45", end: "23:15", title: "監管鏈 A 金器移交", desc: "【最高機密】與細佬、丁共同收集並保管劉媽媽人情袋與金器，親手交予劉媽媽。", tag: "高風險任務", urgent: true },
+                    { start: "23:15", end: "23:30", title: "終極撤退：物資上花車", desc: "協助清點現場剩餘自攜物資並安全搬運上車，任務圓滿完成。" }
+                ]
+            },
+            brother: {
+                name: "細佬",
+                title: "交通組長、後勤與財物監管",
+                color: "indigo",
+                tips: [
+                    "你是唯一的交通組長，保持手機電量充足與暢通。",
+                    "18:15 搬運 Backdrop 體積巨大，請預先確認場地移動路線。"
+                ],
+                timeline: [
+                    { start: "11:15", end: "12:00", title: "車隊 Call 到位", desc: "聯絡 27座/65座接駁車（Shuttle Bus）及主花車，確保車隊已到達酒店大門準備出發。", tag: "關鍵交通" },
+                    { start: "12:00", end: "13:00", title: "「醫肚團隊」午餐安排", desc: "負責處理順風圍工作人員與兄弟姊妹的午餐事宜。", tag: "後勤補給" },
+                    { start: "13:00", end: "14:05", title: "Zone A (嫲嫲屋) 清理裝飾", desc: "拜神入門完成後清理臨時物資，爭取時間在原地休息充好電。" },
+                    { start: "14:05", end: "15:00", title: "轉場：27座司機準備", desc: "電話確認 27座接駁車司機已 Ready，準備帶大隊前往 M+ 會場。", tag: "交通調度" },
+                    { start: "15:00", end: "16:00", title: "全員抵達 M+ 搬運物資", desc: "接駁車抵達 M+，開工與大隊一起將物資運送到餐廳「璞」。" },
+                    { start: "16:00", end: "17:00", title: "證婚位置 Set-up", desc: "聽從 Amy 指揮，與 Willson 共同將證婚區的所有佈置擺放到位。", tag: "佈置組" },
+                    { start: "17:00", end: "18:15", title: "Reception Standby 迎賓", desc: "進入接待處工作崗位，準備迎接證婚來賓。" },
+                    { start: "18:15", end: "18:30", title: "搬運布藝 Backdrop", desc: "證婚禮成後，與 Willson 將極巨大嘅布藝 Backdrop 搬往迎賓位置並細心調整其闊度。", tag: "重型搬運" },
+                    { start: "18:45", end: "19:15", title: "晚宴迎賓 Reception", desc: "在接待處當值，引導並協助迎賓晚宴期間到場的賓客。" },
+                    { start: "19:15", end: "19:30", title: "支援女家簽到", desc: "留意女家簽到情況，若人手不足彈性支援女家簽到。" },
+                    { start: "19:30", end: "20:30", title: "維持接待處運作", desc: "維持 Reception 到首道菜上桌（預計 20:30）。" },
+                    { start: "20:30", end: "21:30", title: "入口物資執拾、鎖入新娘房", desc: "與春雨一同將入口處迎賓接待物資整理，鎖進新娘房保障安全。", tag: "財物安全" },
+                    { start: "21:30", end: "22:40", title: "敬酒環節 Standby", desc: "入席吃飯之餘，敬酒前準時到位 Standby。" },
+                    { start: "22:40", end: "22:45", title: "交通最後確認：Shuttle Ready", desc: "最後一次聯絡確認離場接駁車已就位，確保賓客可以順利上車。", tag: "關鍵交通" },
+                    { start: "22:45", end: "23:15", title: "送客分流 & 監管鏈 A 金器交收", desc: "【最高機密】與春雨、丁共同收集並保管劉媽媽人情袋與金器，親手交予劉媽媽。", tag: "高風險任務", urgent: true },
+                    { start: "23:15", end: "23:30", title: "終極撤退：物資上花車", desc: "協助將現場剩餘自攜物資安全搬運上車。任務完成！" }
+                ]
+            },
+            wing: {
+                name: "Wing (伴郎)",
+                title: "貼身助理、儀式物資(監管鏈B)",
+                color: "rose",
+                tips: [
+                    "你是「監管鏈 B」唯一負責人，戒指和證書是婚禮心臟，必須隨身看管！",
+                    "負責看管 Mofusand 公仔在轉場（酒店 -> 順風圍 -> M+）時不掉隊。"
+                ],
+                timeline: [
+                    { start: "06:45", end: "07:20", title: "重要任務：為眾人叫早餐", desc: "負責為晨間準備的兄弟姊妹及新人訂購並叫早餐送抵酒店。", tag: "貼身管家" },
+                    { start: "07:20", end: "08:45", title: "領取酒店房卡", desc: "向 AQ 或 Joanne 領取酒店房卡。" },
+                    { start: "08:45", end: "09:00", title: "帶譚爸爸上房", desc: "使用房卡帶女方爸爸（譚爸爸）上出門房。" },
+                    { start: "09:00", end: "11:15", title: "行李搬運上車", desc: "協助將個人及新人行李運上花車。" },
+                    { start: "11:15", end: "11:30", title: "確保 Mofusand 公仔收拾", desc: "出門時確保 Mofusand 公仔全部收好，切勿漏留在酒店房內。", tag: "公仔總管" },
+                    { start: "11:30", end: "12:00", title: "派司機利是 & 出發", desc: "派利是給花車司機，並全程妥善保管好 Mofusand 公仔。" },
+                    { start: "12:00", end: "13:00", title: "「醫肚團隊」午餐時間", desc: "享用或處理順風圍午餐。" },
+                    { start: "13:00", end: "14:10", title: "Zone A 清理裝飾", desc: "與細佬、春、Willson 共同清理 Zone A 的裝飾與物資，隨後休息。" },
+                    { start: "14:10", end: "15:00", title: "物資搬運至接駁車", desc: "協助搬運相關拜神及入門物資至 27座接駁車。" },
+                    { start: "15:00", end: "16:00", title: "抵達 M+，物資搬運", desc: "大隊到達 M+，全員協助將行李與儀式物資搬到餐廳「璞」。" },
+                    { start: "16:00", end: "17:00", title: "迎賓 Set-up & 儀式清單確認", desc: "與春共同負責迎賓 Set-up，並【關鍵核對】結婚證書、誓言卡、戒指、迷你保險箱、Mofusand 是否全部就位。", tag: "監管鏈 B", urgent: true },
+                    { start: "17:30", end: "18:15", title: "證婚儀式：交付物資", desc: "儀式期間，確保保險箱與戒指準時安全交到新郎/花仔手中。", tag: "儀式護送" },
+                    { start: "18:15", end: "18:30", title: "提醒新郎換衫 & 搬拱門", desc: "提醒 Adrian 換晚宴禮服。與春雨共同指揮搬運花環拱門至迎賓處。" },
+                    { start: "18:45", end: "19:30", title: "貼身跟隨新郎 Adrian", desc: "作為伴郎貼身跟隨 Adrian，隨時打點並提供即時提醒。" },
+                    { start: "19:30", end: "20:00", title: "協助賓客入座", desc: "與 Willson 共同指引賓客進行入座安排。" },
+                    { start: "21:30", end: "22:45", title: "敬酒環節 Standby", desc: "敬酒環節前在席邊 Ready 支援。" },
+                    { start: "22:45", end: "23:15", title: "送客分流 / 優先執拾物資", desc: "協助維持送客秩序。送客後立刻優先清點收拾監管鏈 B 的關鍵物資。" },
+                    { start: "23:15", end: "23:30", title: "撤退：物資上花車", desc: "全體 Gentlemen 組成員協助將剩餘物資搬運至花車，圓滿收工！" }
+                ]
+            },
+            ding: {
+                name: "丁丁",
+                title: "流程控管、全局控時與財物監督",
+                color: "rose",
+                tips: [
+                    "你是全日的「氣氛與傳統擔當」，敬茶時請預先熟悉吉祥語。",
+                    "18:00 及 19:00 兩輪小食供應，確保熱食準時新鮮上桌。"
+                ],
+                timeline: [
+                    { start: "10:45", end: "11:30", title: "敬茶吉祥說話 & Check-out", desc: "負責敬茶環節的「吉祥說話」。 Check-out 收集所有房卡（出門房*2, AQ+Joanne房*2, Adrian+Wing房*2）。", tag: "吉祥話/行政" },
+                    { start: "12:00", end: "13:00", title: "斟茶環節：吉祥說話", desc: "於順風圍劉家斟茶環節，負責帶動氣氛與講吉祥賀語。" },
+                    { start: "13:00", end: "14:05", title: "午餐與休息時間", desc: "於順風圍休息並享用午餐。" },
+                    { start: "14:05", end: "15:00", title: "Zone A 準備出發", desc: "於嫲嫲屋企準備轉場，協助確認現場狀況並引導人員上車。" },
+                    { start: "16:00", end: "17:00", title: "指揮迎賓、麻雀房設置 & 餐飲協調", desc: "全局控時。指揮迎賓 Set-up (先借屏風遮海味櫃等)。設置 6-8 張麻雀枱。確認 18:00 中式小食安排。", tag: "現場指揮" },
+                    { start: "17:00", end: "18:15", title: "安排賓客入座", desc: "與 Willson 負責主動引導並安排抵達的賓客入座。" },
+                    { start: "18:15", end: "18:30", title: "證婚後迎賓區調整", desc: "指揮場地工作人員移走屏風，完成證婚後的迎賓區佈置重整。" },
+                    { start: "18:30", end: "18:45", title: "監督第一輪中式小食", desc: "監督第一輪中式小食（共 15 打）準時新鮮供應賓客。" },
+                    { start: "18:45", end: "19:15", title: "Reception Standby 迎賓", desc: "於 Reception 當值招呼來賓。" },
+                    { start: "19:15", end: "19:30", title: "支援女家簽到", desc: "視乎現場女家簽到人手狀況，主動協助女家賓客。" },
+                    { start: "19:30", end: "20:30", title: "維持接待處運作", desc: "維持 Reception 工作，直到 20:30 首道菜上桌後入席。" },
+                    { start: "22:45", end: "23:05", title: "現場指示 & 送客引導", desc: "送客時提供引導，引導賓客前往接駁車位置。" },
+                    { start: "23:05", end: "23:15", title: "監管鏈 A：金器收集", desc: "【最高機密】與春、細佬共同收集劉媽媽的金器與人情袋，確保資產安全。", tag: "高風險任務", urgent: true }
+                ]
+            },
+            willson: {
+                name: "Willson",
+                title: "後勤支援、場地清場與入座安排",
+                color: "indigo",
+                tips: [
+                    "你是晚宴主要的「入座指揮」，需事先熟悉座位表（Seating Plan）以引導賓客快速就座。",
+                    "全日多次搬運大型及重型物資，務必穿著便於活動的舒適鞋子。"
+                ],
+                timeline: [
+                    { start: "09:00", end: "10:55", title: "行李搬運上車", desc: "協助將個人行李及新人行李搬運至花車。" },
+                    { start: "10:55", end: "11:15", title: "酒店房清場", desc: "與春雨進行出門房清場。注意：只需清除新人佈置，酒店自帶物資不動。", tag: "清場專家" },
+                    { start: "11:15", end: "12:00", title: "協助物資搬運出發", desc: "協助搬運相關物資下樓上車，隨後向順風圍出發。" },
+                    { start: "12:00", end: "13:00", title: "「醫肚團隊」午餐安排", desc: "處理或享用順風圍工作人員午餐。" },
+                    { start: "13:00", end: "14:10", title: "清理拜神裝飾 & 休息", desc: "清理現場裝飾物資，隨後進行休息。" },
+                    { start: "14:10", end: "15:00", title: "物資搬運上接駁車", desc: "將拜神儀式所有自帶物資搬上 27座接駁車。" },
+                    { start: "15:00", end: "16:00", title: "M+ 物資進場 & 紅圈移除確認", desc: "抵達 M+，全員搬運物資進「璞」。與春雨確認紅圈標示裝飾是否已確實移除。", tag: "細節核對" },
+                    { start: "16:00", end: "17:00", title: "證婚位置 Set-up", desc: "與細佬在 Amy 指揮下進行證婚位置佈置與設置。" },
+                    { start: "17:00", end: "18:15", title: "安排賓客入座", desc: "與丁丁共同負責帶領並安排抵達的證婚來賓入座。" },
+                    { start: "18:15", end: "18:30", title: "搬運布藝 Backdrop", desc: "證婚後，與細佬將大型布藝 Backdrop 搬至迎賓位置並調整闊度。", tag: "重力擔當" },
+                    { start: "18:45", end: "19:30", title: "引導晚宴賓客入座", desc: "在晚宴迎賓期間，手持座位表負責精準引導賓客入座。", tag: "入座大腦" },
+                    { start: "19:30", end: "20:00", title: "維持入座安排運作", desc: "與 Wing 共同在入口處引導遲到或有特殊調整的賓客入座。" },
+                    { start: "20:30", end: "22:45", title: "入座任務完成", desc: "入座引導結束，可準備入席享用晚宴，期間待命支援。" },
+                    { start: "22:45", end: "23:15", title: "現場指示 & 送客引導", desc: "提供現場指示，引導賓客離場並指引前往接駁車。" },
+                    { start: "23:15", end: "23:30", title: "終極撤退：物資上花車", desc: "Gentlemen 組全員動身，將現場剩餘自攜物資全部搬到花車上。" }
+                ]
+            }
+        };
+
+        // Standard timing parameters
+        const WEDDING_DATE_STRING = "2026-05-24";
+        const START_TIME = new Date(`${WEDDING_DATE_STRING}T06:45:00+08:00`).getTime();
+        const END_TIME = new Date(`${WEDDING_DATE_STRING}T23:30:00+08:00`).getTime();
+        
+        let currentCrew = localStorage.getItem('last_active_crew') || 'chun';
+        let debugTimeOffset = 0;
+        let isDebugMode = false;
+        
+        // HKT Formatter
+        const timeFormatter = new Intl.DateTimeFormat('en-US', {
+            timeZone: 'Asia/Hong_Kong',
+            hour12: false,
+            hour: '2-digit',
+            minute: '2-digit',
+            second: '2-digit'
+        });
+
+        const dateFormatter = new Intl.DateTimeFormat('en-US', {
+            timeZone: 'Asia/Hong_Kong',
+            year: 'numeric',
+            month: '2-digit',
+            day: '2-digit'
+        });
+
+        function parseTaskTime(timeString) {
+            return new Date(`${WEDDING_DATE_STRING}T${timeString}:00+08:00`).getTime();
+        }
+
+        // Switch Active Crew Profile
+        window.switchCrew = function(crewKey) {
+            currentCrew = crewKey;
+            localStorage.setItem('last_active_crew', crewKey);
+            
+            // Toggle Button Styling
+            document.querySelectorAll('.crew-btn').forEach(btn => {
+                btn.className = "crew-btn shrink-0 px-4 py-2.5 text-xs font-black rounded-xl transition-all snap-start shadow-sm border bg-white text-slate-600 border-slate-200 hover:bg-slate-50";
+            });
+            
+            const activeBtn = document.getElementById(`crew-${crewKey}`);
+            const isRose = CREW_DATA[crewKey].color === 'rose';
+            
+            if (isRose) {
+                activeBtn.className = "crew-btn shrink-0 px-4 py-2.5 text-xs font-black rounded-xl transition-all snap-start shadow-sm border bg-rose-600 text-white border-rose-600";
+            } else {
+                activeBtn.className = "crew-btn shrink-0 px-4 py-2.5 text-xs font-black rounded-xl transition-all snap-start shadow-sm border bg-indigo-600 text-white border-indigo-600";
+            }
+
+            renderTimeline();
+            tick(); // Instant update
+        }
+
+        // Dynamic HTML Timeline Card Builder
+        function renderTimeline() {
+            const container = document.getElementById('timeline-container');
+            container.innerHTML = "";
+            
+            const data = CREW_DATA[currentCrew];
+            
+            data.timeline.forEach((task, idx) => {
+                const isUrgent = task.urgent;
+                const borderClass = isUrgent ? 'border-rose-300 bg-rose-50/30' : 'border-slate-200 bg-white';
+                const tagEl = task.tag ? `<span class="text-[10px] bg-slate-100 text-slate-600 px-2 py-0.5 rounded-full font-medium">${task.tag}</span>` : '';
+                
+                let timeRange = task.start;
+                if (task.end && task.start !== task.end) {
+                    const durationMins = (parseTaskTime(task.end) - parseTaskTime(task.start)) / 60000;
+                    if (durationMins < 60) {
+                        timeRange = `${task.start} - ${task.end}`;
+                    } else {
+                        timeRange = `${task.start}`;
+                    }
+                }
+
+                const cardHtml = `
+                    <div class="task-card bg-white rounded-xl p-3.5 shadow-sm border transition-all duration-300 relative" 
+                         data-start="${task.start}" 
+                         data-end="${task.end}"
+                         id="task-idx-${idx}">
+                        <div class="absolute -left-6 top-4 w-4 h-0.5 bg-rose-100"></div>
+                        <div class="flex items-start gap-2.5">
+                            <div class="flex-1">
+                                <div class="flex justify-between items-start gap-2">
+                                    <span class="task-title font-bold text-sm text-slate-800 leading-snug">${task.title}</span>
+                                    <span class="time-badge shrink-0 text-[10px] font-extrabold px-2 py-0.5 rounded bg-slate-100 text-slate-600 transition-colors">${timeRange}</span>
+                                </div>
+                                <p class="text-xs text-slate-500 mt-1 leading-relaxed">${task.desc}</p>
+                                ${tagEl ? `<div class="mt-2 flex flex-wrap gap-1">${tagEl}</div>` : ''}
+                            </div>
+                        </div>
+                    </div>
+                `;
+                container.insertAdjacentHTML('beforeend', cardHtml);
+            });
+        }
+
+        // HKT Real-time ticking engine
+        function tick() {
+            const realNow = new Date().getTime();
+            const now = realNow + debugTimeOffset;
+            
+            const hkTimeString = timeFormatter.format(new Date(now));
+            const hkDateString = dateFormatter.format(new Date(now));
+            
+            const isWeddingDay = hkDateString === "05/24/2026";
+            
+            // 1. Digital Clock
+            if (isDebugMode) {
+                document.getElementById('live-clock').innerHTML = `<span class="text-rose-500">${hkTimeString}</span>`;
+            } else {
+                document.getElementById('live-clock').innerText = hkTimeString;
+            }
+
+            // 2. Real-time Progress Bar
+            let percentage = 0;
+            if (now >= END_TIME) {
+                percentage = 100;
+            } else if (now > START_TIME && now < END_TIME) {
+                percentage = ((now - START_TIME) / (END_TIME - START_TIME)) * 100;
+            }
+            document.getElementById('progress-percentage').innerText = `${Math.floor(percentage)}%`;
+            document.getElementById('time-progress-bar').style.width = `${percentage}%`;
+
+            // 3. Auto Highlighting System
+            let activeTaskFound = false;
+            let currentTaskName = "";
+            
+            const activeCrewColor = CREW_DATA[currentCrew].color;
+            const bgClassActive = activeCrewColor === 'rose' ? 'bg-rose-500' : 'bg-indigo-600';
+            const borderClassActive = activeCrewColor === 'rose' ? 'border-rose-500' : 'border-indigo-500';
+            const textClassActive = 'text-white';
+            
+            const taskCards = document.querySelectorAll('.task-card');
+            taskCards.forEach(card => {
+                const start = parseTaskTime(card.dataset.start);
+                const end = parseTaskTime(card.dataset.end);
+                const timeBadge = card.querySelector('.time-badge');
+
+                // Clear previous active states
+                card.classList.remove('task-active');
+                timeBadge.classList.remove('bg-rose-500', 'bg-indigo-600', 'text-white');
+                timeBadge.classList.add('bg-slate-100', 'text-slate-600');
+
+                if (isWeddingDay || isDebugMode) {
+                    if (now >= start && now < end) {
+                        card.classList.add('task-active');
+                        // Inject active style overrides depending on crew color
+                        timeBadge.classList.remove('bg-slate-100', 'text-slate-600');
+                        timeBadge.classList.add(bgClassActive, textClassActive);
+                        activeTaskFound = true;
+                        currentTaskName = card.querySelector('.task-title').innerText;
+                    }
+                }
+            });
+
+            // 4. Update Status Indicator Panel
+            const activeDot = document.getElementById('active-dot');
+            const activePing = document.getElementById('active-ping');
+            const statusText = document.getElementById('current-task-status');
+
+            if (!isWeddingDay && !isDebugMode) {
+                activeDot.className = "relative inline-flex rounded-full h-3 w-3 bg-slate-300";
+                activePing.classList.add('hidden');
+                statusText.innerText = "等待大日子降臨...";
+                statusText.className = "text-xs font-bold text-slate-400";
+            } else if (now < START_TIME) {
+                activeDot.className = "relative inline-flex rounded-full h-3 w-3 bg-amber-400";
+                activePing.classList.add('hidden');
+                statusText.innerText = "準備出發";
+                statusText.className = "text-xs font-bold text-amber-600";
+            } else if (now >= END_TIME) {
+                activeDot.className = "relative inline-flex rounded-full h-3 w-3 bg-emerald-500";
+                activePing.classList.add('hidden');
+                statusText.innerText = "今日作戰順利，辛苦晒！";
+                statusText.className = "text-xs font-bold text-emerald-600";
+            } else if (activeTaskFound) {
+                const dotColor = activeCrewColor === 'rose' ? 'bg-rose-600' : 'bg-indigo-600';
+                activeDot.className = `relative inline-flex rounded-full h-3 w-3 ${dotColor}`;
+                activePing.className = `animate-ping absolute inline-flex h-full w-full rounded-full ${activeCrewColor === 'rose' ? 'bg-rose-400' : 'bg-indigo-400'} opacity-75`;
+                activePing.classList.remove('hidden');
+                
+                statusText.innerText = currentTaskName;
+                statusText.className = `text-xs font-black ${activeCrewColor === 'rose' ? 'text-rose-600' : 'text-indigo-600'} truncate max-w-[180px] text-right`;
+            } else {
+                activeDot.className = "relative inline-flex rounded-full h-3 w-3 bg-blue-400";
+                activePing.classList.add('hidden');
+                statusText.innerText = "緩衝 / 待命中";
+                statusText.className = "text-xs font-bold text-blue-600";
+            }
+        }
+
+        // Debug simulator (3x click hidden helper)
+        let clickCount = 0;
+        let clickTimer;
+        document.getElementById('app-title').addEventListener('click', () => {
+            clickCount++;
+            clearTimeout(clickTimer);
+            clickTimer = setTimeout(() => { clickCount = 0; }, 1000);
+            
+            if (clickCount === 3) {
+                clickCount = 0;
+                const simulateTime = prompt("【除錯模式】輸入你想模擬嘅婚禮時間 (例如 09:30, 16:30, 22:45)\n取消可關閉除錯模式並重回真實時間:", "16:30");
+                if (simulateTime && simulateTime.includes(':')) {
+                    const targetTimestamp = parseTaskTime(simulateTime);
+                    debugTimeOffset = targetTimestamp - new Date().getTime();
+                    isDebugMode = true;
+                    tick();
+                    alert(`已將時間模擬至 ${simulateTime}`);
+                } else {
+                    debugTimeOffset = 0;
+                    isDebugMode = false;
+                    alert("除錯模式已關閉，恢復真實時間。");
+                }
+            }
+        });
+
+        // Bootstrap on load
+        window.addEventListener('DOMContentLoaded', () => {
+            switchCrew(currentCrew);
+            setInterval(tick, 1000);
+        });
+    </script>
+</body>
+</html>
