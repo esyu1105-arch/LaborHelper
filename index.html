@@ -27,12 +27,12 @@
             background: #cbd5e1;
             border-radius: 2px;
         }
-        /* Real-time active highlighted task card */
+        /* Real-time active highlighted task card in Premium Rose Theme */
         .task-active {
             border-color: #e11d48 !important; /* rose-600 */
             background-color: #fff1f2 !important; /* rose-50 */
-            box-shadow: 0 4px 12px rgba(225, 29, 72, 0.12), 0 0 0 2px rgba(225, 29, 72, 0.15);
-            transform: scale(1.02);
+            box-shadow: 0 10px 15px -3px rgba(225, 29, 72, 0.1), 0 4px 6px -4px rgba(225, 29, 72, 0.1);
+            transform: scale(1.015);
             transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
         }
     </style>
@@ -49,7 +49,7 @@
                 <div>
                     <!-- Click title 3 times to open debug time simulator -->
                     <h1 id="app-title" class="font-bold text-base leading-tight text-slate-800 active:opacity-50 select-none">婚禮聯合作戰指揮部</h1>
-                    <p class="text-[10px] text-slate-500 font-medium">Manessa & Adrian (24 May 2026)</p>
+                    <p class="text-[10px] text-slate-500 font-medium">Manessa & Adrian (23-24 May 2026)</p>
                 </div>
             </div>
             <div class="text-right">
@@ -71,29 +71,29 @@
             <div class="relative z-10">
                 <div class="flex justify-between items-end mb-3">
                     <div>
-                        <p class="text-[10px] font-bold uppercase tracking-wider text-slate-400 mb-0.5">當前香港時間 (HKT)</p>
+                        <p id="clock-label" class="text-[10px] font-bold uppercase tracking-wider text-slate-400 mb-0.5">當前香港時間 (HKT)</p>
                         <div id="live-clock" class="text-3xl font-black text-slate-800 tracking-tight tabular-nums">--:--:--</div>
                     </div>
                     <div class="text-right">
-                        <p class="text-[10px] font-bold uppercase tracking-wider text-slate-400 mb-0.5">全日進度 (06:45-23:30)</p>
+                        <p class="text-[10px] font-bold uppercase tracking-wider text-slate-400 mb-0.5">聯防總進度</p>
                         <div id="progress-percentage" class="text-lg font-bold text-rose-600">0%</div>
                     </div>
                 </div>
 
-                <!-- Live Progress Bar -->
+                <!-- Live Progress Bar spanning May 23 21:00 to May 24 23:30 -->
                 <div class="w-full bg-slate-100 h-2.5 rounded-full overflow-hidden mb-4 relative shadow-inner">
                     <div id="time-progress-bar" class="bg-gradient-to-r from-rose-500 to-pink-500 h-full w-0 transition-all duration-1000 ease-linear"></div>
                 </div>
                 
                 <div class="bg-slate-50 border border-slate-100 rounded-xl p-3 flex items-center justify-between">
-                    <div class="flex items-center gap-2">
-                        <span class="relative flex h-3 w-3">
+                    <div class="flex items-center gap-2 overflow-hidden">
+                        <span class="relative flex h-3 w-3 shrink-0">
                             <span id="active-ping" class="animate-ping absolute inline-flex h-full w-full rounded-full bg-rose-400 opacity-75 hidden"></span>
                             <span id="active-dot" class="relative inline-flex rounded-full h-3 w-3 bg-slate-300"></span>
                         </span>
-                        <span class="text-xs font-bold text-slate-600">當前指令 :</span>
+                        <span class="text-xs font-bold text-slate-600 shrink-0">當前指令 :</span>
                     </div>
-                    <span id="current-task-status" class="text-xs font-black text-slate-400 truncate max-w-[180px] text-right">等待大日子降臨...</span>
+                    <span id="current-task-status" class="text-xs font-black text-slate-400 truncate max-w-[180px] text-right ml-2">等待大日子降臨...</span>
                 </div>
             </div>
         </div>
@@ -122,7 +122,7 @@
 
         <!-- ================= TIMELINE CONTAINER ================= -->
         <div class="relative pl-5 space-y-6 border-l-2 border-rose-100 ml-2 mt-4" id="timeline-container">
-            <!-- Timeline elements will be automatically rendered/toggled via JS -->
+            <!-- Timeline elements rendered dynamically via JS -->
         </div>
 
         <!-- Global Bottom Notes -->
@@ -151,144 +151,156 @@
                 name: "春雨 (春)",
                 title: "後勤、接待與財物監管",
                 color: "rose",
-                tips: [
-                    "全日多次涉及搬運，必須穿著舒適的鞋子。",
-                    "晚宴接待預計到 20:30 收工入席，19:15 後請留意女家簽到情況。"
-                ],
                 timeline: [
-                    { start: "09:00", end: "10:55", title: "個人行李上車", desc: "協助將新人個人行李、衣物安全送上花車。", tag: "重物擔當" },
-                    { start: "10:55", end: "11:15", title: "酒店出門房清場", desc: "與 Willson 合作進行出門房清場（僅清除新人佈置，酒店物品不動）。", tag: "細節執行" },
-                    { start: "11:15", end: "12:00", title: "搬運物資出發", desc: "清場後迅速將物資搬運上車，準備向順風圍出發。" },
-                    { start: "12:00", end: "13:00", title: "「醫肚團隊」午餐安排", desc: "負責處理並分配工作人員與兄弟姊妹的午餐事宜。", tag: "後勤補給" },
-                    { start: "13:00", end: "14:10", title: "Zone A (嫲嫲屋) 清理 & 休息", desc: "拜神入門完結後，協助清理嫲嫲屋企臨時物資，隨後休息。" },
-                    { start: "14:10", end: "15:00", title: "搬運物資到 27座接駁車", desc: "與 Wing、Willson 將順風圍所有物資安全搬運到接駁車位置。", tag: "體力活" },
-                    { start: "15:00", end: "16:00", title: "物資進場 & 回禮交收", desc: "抵達 M+ 全員搬運物資進「璞」。與 Willson 將回禮交給 Joel，確保特定的房屋裝飾移走。" },
-                    { start: "16:00", end: "17:00", title: "迎賓區 Set-up 佈置", desc: "在「丁丁」的指揮下與 Wing 共同負責佈置迎賓位置。", tag: "佈置組" },
-                    { start: "17:00", end: "17:30", title: "Reception Standby 迎賓", desc: "進入接待處工作崗位，準備迎接證婚來賓。" },
-                    { start: "17:30", end: "18:15", title: "證婚儀式 Recep 支援", desc: "證婚儀式期間堅守接待處，為遲到賓客簽到、領位並保管人情。" },
-                    { start: "18:15", end: "18:30", title: "搬移花環拱門", desc: "證婚禮成後，與 Wing 指導工作人員將拱門安全移往迎賓位置，確保掛牌無損。" },
-                    { start: "18:45", end: "19:15", title: "晚宴迎賓 Reception", desc: "在接待處當值，負責引導迎賓晚宴期間到場的賓客。" },
-                    { start: "19:15", end: "19:30", title: "支援女家簽到", desc: "如女家接待處人手緊張，隨時切換角色協助女家賓客簽到及指引座位。" },
-                    { start: "19:30", end: "20:30", title: "維持接待處運作", desc: "接待處當值至首道菜上桌（約 20:30），保障迎賓秩序。" },
-                    { start: "20:30", end: "21:30", title: "Recep 關站 & 鎖入新娘房", desc: "與細佬將入口處物資整理，鎖進新娘房保障安全。", tag: "財物安全" },
-                    { start: "21:30", end: "22:40", title: "入席食飯 / 敬酒 Standby", desc: "入席吃飯，並於 21:30 敬酒環節前準時到位 Standby 走位。" },
-                    { start: "22:40", end: "22:45", title: "送客分流引導", desc: "維持門口秩序，指引賓客離開並確認接駁巴士就緒。" },
-                    { start: "22:45", end: "23:15", title: "監管鏈 A 金器移交", desc: "【最高機密】與細佬、丁共同收集並保管劉媽媽人情袋與金器，親手交予劉媽媽。", tag: "高風險任務", urgent: true },
-                    { start: "23:15", end: "23:30", title: "終極撤退：物資上花車", desc: "協助清點現場剩餘自攜物資並安全搬運上車，任務圓滿完成。" }
+                    // 5月23日
+                    { date: "2026-05-23", start: "21:00", end: "22:00", title: "到達如心酒店 Standby", desc: "抵達荃灣西如心酒店準備就緒。" },
+                    { date: "2026-05-23", start: "22:00", end: "23:59", title: "支援任務：買糖水湯圓", desc: "協助購買糖水湯圓（3 碗，各 3 粒，需含生果）。", tag: "前哨補給", materials: "糖水湯圓 (3碗，含生果)" },
+                    // 5月24日
+                    { date: "2026-05-24", start: "09:00", end: "09:30", title: "集合及個人行李上花車", desc: "於酒店集合，協助將個人行李及新人物資搬運上花車。", tag: "體力活", materials: "個人行李、新人物資" },
+                    { date: "2026-05-24", start: "09:30", end: "10:00", title: "拍攝兄弟團合照", desc: "於酒店樓下集合，配合攝影師拍攝兄弟團合照。" },
+                    { date: "2026-05-24", start: "10:55", end: "11:15", title: "關鍵清場任務：出門房清場", desc: "與 Willson 進行出門房清場。注意：只需清除新人自帶佈置物資，酒店原有的物品千萬不用動，使用垃圾袋整理。", tag: "細節核對", materials: "大垃圾袋" },
+                    { date: "2026-05-24", start: "11:15", end: "11:30", title: "搬運物資到酒店大門", desc: "清場後將所有自帶儀式物資迅速搬運至大門，準備出發。" },
+                    { date: "2026-05-24", start: "12:00", end: "13:00", title: "「醫肚團隊」午餐安排", desc: "歸類為醫肚團隊，協助分發、處理或享用順風圍的午餐安排。", tag: "後勤補給" },
+                    { date: "2026-05-24", start: "13:00", end: "14:10", title: "Zone A (嫲嫲屋) 清理裝飾", desc: "拜神入門儀式完成後，清理 Zone A 的臨時裝飾物資，隨後在原地休息充好電。" },
+                    { date: "2026-05-24", start: "14:10", end: "15:00", title: "搬運物資到 27座接駁車", desc: "與 Wing、Willson 一起將所有拜神及儀式物資搬到 27 座接駁車上。", tag: "體力活" },
+                    { date: "2026-05-24", start: "15:00", end: "16:00", title: "抵達 M+ 物資進場 & 房屋裝飾移除", desc: "抵達 M+ 後，全員協助將道具運送至餐廳「璞」。與 Willson 負責將回禮禮物移交給 Joel 派發，並確保特定的房屋裝飾（手冊中紅圈標示者）已確實移除。", tag: "細節核對", materials: "回禮禮物、紅圈裝飾檢查清單" },
+                    { date: "2026-05-24", start: "16:00", end: "17:00", title: "迎賓區 Set-up 佈置", desc: "在「丁丁」的指揮與統籌下，與 Wing 共同負責佈置迎賓位置、放置支柱及擺放 Mofusand 公仔。", tag: "佈置組", materials: "支柱、Mofusand 公仔" },
+                    { date: "2026-05-24", start: "17:00", end: "17:30", title: "Reception Standby 迎賓準備", desc: "進入接待處工作崗位，準備簽到簿與迎賓工具，迎接陸續抵達的證婚賓客。", materials: "簽到簿、簽到筆" },
+                    { date: "2026-05-24", start: "18:15", end: "18:30", title: "搬移花環拱門", desc: "證婚禮成後，與 Wing 一起指揮工作人員將花環拱門安全搬移至晚宴迎賓位置，並確認新人名牌正確、無損地掛在拱門上。", tag: "場地轉場", materials: "花環拱門、新人名牌" },
+                    { date: "2026-05-24", start: "18:45", end: "19:30", title: "晚宴迎賓 Reception Standby", desc: "於接待處當值，引導晚宴期間到場的賓客簽到、送人情並做好紀錄。" },
+                    { date: "2026-05-24", start: "19:15", end: "19:30", title: "協助女家賓客簽到", desc: "密切留意女家接待處狀況，如人手緊張隨時切換角色協助女家簽到。" },
+                    { date: "2026-05-24", start: "20:00", end: "20:30", title: "晚宴 March-in 進場氣氛", desc: "晚宴進場開始，與兄弟姊妹團於入口走廊兩旁企好，使用泡泡槍營造浪漫氣氛。", materials: "泡泡槍" },
+                    { date: "2026-05-24", start: "20:30", end: "21:30", title: "物資整理與鎖入新娘房", desc: "晚宴接待處工作完成，與細佬共同將入口處重要迎賓物資整理妥當，並全部移送至新娘房內鎖好。隨後入席享用晚宴。", tag: "財物安全" },
+                    { date: "2026-05-24", start: "21:30", end: "22:45", title: "敬酒環節 Standby", desc: "於敬酒環節前在席邊 Ready 支援走位或臨時調配。" },
+                    { date: "2026-05-24", start: "22:45", end: "23:15", title: "送客分流 & 【監管鏈 A】金器移交", desc: "【最高機密】送客開始時在現場提供引導指示。送客完畢後，與細佬、丁丁共同收集並清點劉媽媽的人情袋與所有金器，由你負責最終「親手」移交給劉媽媽，確保安全！", tag: "高風險任務", urgent: true, materials: "劉媽媽金器、人情袋" },
+                    { date: "2026-05-24", start: "23:15", end: "23:30", title: "終極撤退：物資上花車", desc: "全員動手，將現場剩餘自攜物資全部搬運上花車。任務正式圓滿完成！" }
                 ]
             },
             brother: {
                 name: "細佬",
                 title: "交通組長、後勤與財物監管",
                 color: "indigo",
-                tips: [
-                    "你是唯一的交通組長，保持手機電量充足與暢通。",
-                    "18:15 搬運 Backdrop 體積巨大，請預先確認場地移動路線。"
-                ],
                 timeline: [
-                    { start: "11:15", end: "12:00", title: "車隊 Call 到位", desc: "聯絡 27座/65座接駁車（Shuttle Bus）及主花車，確保車隊已到達酒店大門準備出發。", tag: "關鍵交通" },
-                    { start: "12:00", end: "13:00", title: "「醫肚團隊」午餐安排", desc: "負責處理順風圍工作人員與兄弟姊妹的午餐事宜。", tag: "後勤補給" },
-                    { start: "13:00", end: "14:05", title: "Zone A (嫲嫲屋) 清理裝飾", desc: "拜神入門完成後清理臨時物資，爭取時間在原地休息充好電。" },
-                    { start: "14:05", end: "15:00", title: "轉場：27座司機準備", desc: "電話確認 27座接駁車司機已 Ready，準備帶大隊前往 M+ 會場。", tag: "交通調度" },
-                    { start: "15:00", end: "16:00", title: "全員抵達 M+ 搬運物資", desc: "接駁車抵達 M+，開工與大隊一起將物資運送到餐廳「璞」。" },
-                    { start: "16:00", end: "17:00", title: "證婚位置 Set-up", desc: "聽從 Amy 指揮，與 Willson 共同將證婚區的所有佈置擺放到位。", tag: "佈置組" },
-                    { start: "17:00", end: "18:15", title: "Reception Standby 迎賓", desc: "進入接待處工作崗位，準備迎接證婚來賓。" },
-                    { start: "18:15", end: "18:30", title: "搬運布藝 Backdrop", desc: "證婚禮成後，與 Willson 將極巨大嘅布藝 Backdrop 搬往迎賓位置並細心調整其闊度。", tag: "重型搬運" },
-                    { start: "18:45", end: "19:15", title: "晚宴迎賓 Reception", desc: "在接待處當值，引導並協助迎賓晚宴期間到場的賓客。" },
-                    { start: "19:15", end: "19:30", title: "支援女家簽到", desc: "留意女家簽到情況，若人手不足彈性支援女家簽到。" },
-                    { start: "19:30", end: "20:30", title: "維持接待處運作", desc: "維持 Reception 到首道菜上桌（預計 20:30）。" },
-                    { start: "20:30", end: "21:30", title: "入口物資執拾、鎖入新娘房", desc: "與春雨一同將入口處迎賓接待物資整理，鎖進新娘房保障安全。", tag: "財物安全" },
-                    { start: "21:30", end: "22:40", title: "敬酒環節 Standby", desc: "入席吃飯之餘，敬酒前準時到位 Standby。" },
-                    { start: "22:40", end: "22:45", title: "交通最後確認：Shuttle Ready", desc: "最後一次聯絡確認離場接駁車已就位，確保賓客可以順利上車。", tag: "關鍵交通" },
-                    { start: "22:45", end: "23:15", title: "送客分流 & 監管鏈 A 金器交收", desc: "【最高機密】與春雨、丁共同收集並保管劉媽媽人情袋與金器，親手交予劉媽媽。", tag: "高風險任務", urgent: true },
-                    { start: "23:15", end: "23:30", title: "終極撤退：物資上花車", desc: "協助將現場剩餘自攜物資安全搬運上車。任務完成！" }
+                    // 5月24日
+                    { date: "2026-05-24", start: "09:00", end: "09:30", title: "集合及行李搬運上花車", desc: "於酒店集合，協助將個人行李搬運上花車。", tag: "體力活" },
+                    { date: "2026-05-24", start: "09:30", end: "10:00", title: "拍攝兄弟團合照", desc: "於酒店樓下集合，配合攝影師拍攝兄弟團合照。" },
+                    { date: "2026-05-24", start: "11:15", end: "11:30", title: "【關鍵交通】聯絡車隊準時到位", desc: "致電聯絡 27 座、65 座接駁車（Shuttle Bus）及主花車司機，確保所有車輛已到達酒店大門準備上客出發。", tag: "交通調度", urgent: true, materials: "司機電話名單" },
+                    { date: "2026-05-24", start: "11:30", end: "12:00", title: "出發前往順風圍", desc: "登上車隊，指引路線並出發前往順風圍入門地點。" },
+                    { date: "2026-05-24", start: "12:00", end: "13:00", title: "「醫肚團隊」午餐安排", desc: "負責處理、分發或享用順風圍工作人員與兄弟姊妹的午餐事宜。", tag: "後勤補給" },
+                    { date: "2026-05-24", start: "13:00", end: "14:05", title: "Zone A (嫲嫲屋) 清理裝飾", desc: "清理嫲嫲屋企臨時入門及拜神物資，隨後在原地休息、玩電話、充好手機電量。" },
+                    { date: "2026-05-24", start: "14:05", end: "14:10", title: "【交通確認】27座接駁車司機準備", desc: "致電確認 27 座接駁車司機已 Ready，準備帶大隊轉場前往 M+。", tag: "交通調度", materials: "27座司機電話" },
+                    { date: "2026-05-24", start: "14:10", end: "14:15", title: "協助物資搬運上接駁車", desc: "協助將所有順風圍儀式物資搬到接駁車上。" },
+                    { date: "2026-05-24", start: "14:15", end: "15:00", title: "隨車隊轉場出發前往 M+", desc: "引導 27 座接駁車順利出發，準備抵達 M+。" },
+                    { date: "2026-05-24", start: "15:00", end: "16:00", title: "抵達 M+ & 物資進場", desc: "全員抵達 M+，協助將物資車上的所有道具搬運送到餐廳「璞」，並將個人隨身物品先放進新娘房保管。" },
+                    { date: "2026-05-24", start: "16:00", end: "17:00", title: "證婚位置 Set-up", desc: "在總指揮 Amy 的協調下，與 Willson 共同負責將證婚區的所有佈置（椅子、花藝等）擺放到位，隨後進行總彩排 Standing by。", tag: "佈置組", materials: "證婚座椅、證婚區佈置物" },
+                    { date: "2026-05-24", start: "17:00", end: "17:30", title: "Reception Standby 迎賓", desc: "於接待處工作崗位 Ready，準備招呼來賓。" },
+                    { date: "2026-05-24", start: "17:30", end: "18:15", title: "證婚儀式：戴超及操作泡泡槍", desc: "證婚進場時，與兄弟戰隊戴上太陽眼鏡，操作泡泡槍。結尾 Re-march in 時同樣操作泡泡槍，營造最佳氣氛！", materials: "太陽眼鏡、泡泡槍" },
+                    { date: "2026-05-24", start: "18:15", end: "18:30", title: "搬運布藝 Backdrop", desc: "證婚禮成後，與 Willson 共同將 3m*3m 的巨大「布藝 Backdrop」安全搬移往迎賓位置，並細心調整其闊度。", tag: "重力擔當", materials: "布藝 Backdrop" },
+                    { date: "2026-05-24", start: "18:45", end: "19:30", title: "晚宴迎賓 Reception Standby", desc: "在接待處當值，負責引導迎賓晚宴期間到場的賓客簽到、領位。" },
+                    { date: "2026-05-24", start: "19:15", end: "19:30", title: "協助女家賓客簽到", desc: "如女家接待處人手緊張，隨時彈性協助女家賓客簽到。" },
+                    { date: "2026-05-24", start: "19:30", end: "20:30", title: "維持接待處運作", desc: "維持 Reception 工作，直到 20:30 首道菜上菜後入席吃飯。" },
+                    { date: "2026-05-24", start: "20:00", end: "20:30", title: "晚宴進場：操作泡泡槍", desc: "晚宴進場開始，與兄弟姊妹團立於入口走廊兩旁，使用泡泡槍營造氣氛。", materials: "泡泡槍" },
+                    { date: "2026-05-24", start: "20:30", end: "21:30", title: "物資整理搬入新娘房", desc: "與春雨一同將入口接待處重要物資收拾，搬進新娘房並鎖好，保障財物安全。", tag: "財物安全" },
+                    { date: "2026-05-24", start: "21:30", end: "22:40", title: "敬酒環節 Standby", desc: "敬酒環節前於席邊 Ready 支援。" },
+                    { date: "2026-05-24", start: "22:40", end: "22:45", title: "【交通最後確認】Shuttle Ready", desc: "最後一次致電聯絡離場接駁車（Shuttle）司機，確保車輛已就位，通知大家可陸續安排賓客上車。", tag: "交通調度", urgent: true, materials: "接駁車司機電話" },
+                    { date: "2026-05-24", start: "22:45", end: "23:15", title: "送客分流 & 【監管鏈 A】金器收集", desc: "【最高機密】引導賓客前往接駁車。送客結束後，與春雨、丁丁共同收集並保管劉媽媽的人情袋與所有金器（監管鏈 A），交予春雨親自交予劉媽媽。", tag: "高風險任務", urgent: true, materials: "劉媽媽金器、人情袋" },
+                    { date: "2026-05-24", start: "23:15", end: "23:30", title: "終極撤退：物資上花車", desc: "Gentlemen組成員全體動身，協助將現場剩餘物資搬到花車上，圓滿收工！" }
                 ]
             },
             wing: {
                 name: "Wing (伴郎)",
-                title: "貼身助理、儀式物資(監管鏈B)",
+                title: "貼身助理、儀式物資唯一保管人 (監管鏈B)",
                 color: "rose",
-                tips: [
-                    "你是「監管鏈 B」唯一負責人，戒指和證書是婚禮心臟，必須隨身看管！",
-                    "負責看管 Mofusand 公仔在轉場（酒店 -> 順風圍 -> M+）時不掉隊。"
-                ],
                 timeline: [
-                    { start: "06:45", end: "07:20", title: "重要任務：為眾人叫早餐", desc: "負責為晨間準備的兄弟姊妹及新人訂購並叫早餐送抵酒店。", tag: "貼身管家" },
-                    { start: "07:20", end: "08:45", title: "領取酒店房卡", desc: "向 AQ 或 Joanne 領取酒店房卡。" },
-                    { start: "08:45", end: "09:00", title: "帶譚爸爸上房", desc: "使用房卡帶女方爸爸（譚爸爸）上出門房。" },
-                    { start: "09:00", end: "11:15", title: "行李搬運上車", desc: "協助將個人及新人行李運上花車。" },
-                    { start: "11:15", end: "11:30", title: "確保 Mofusand 公仔收拾", desc: "出門時確保 Mofusand 公仔全部收好，切勿漏留在酒店房內。", tag: "公仔總管" },
-                    { start: "11:30", end: "12:00", title: "派司機利是 & 出發", desc: "派利是給花車司機，並全程妥善保管好 Mofusand 公仔。" },
-                    { start: "12:00", end: "13:00", title: "「醫肚團隊」午餐時間", desc: "享用或處理順風圍午餐。" },
-                    { start: "13:00", end: "14:10", title: "Zone A 清理裝飾", desc: "與細佬、春、Willson 共同清理 Zone A 的裝飾與物資，隨後休息。" },
-                    { start: "14:10", end: "15:00", title: "物資搬運至接駁車", desc: "協助搬運相關拜神及入門物資至 27座接駁車。" },
-                    { start: "15:00", end: "16:00", title: "抵達 M+，物資搬運", desc: "大隊到達 M+，全員協助將行李與儀式物資搬到餐廳「璞」。" },
-                    { start: "16:00", end: "17:00", title: "迎賓 Set-up & 儀式清單確認", desc: "與春共同負責迎賓 Set-up，並【關鍵核對】結婚證書、誓言卡、戒指、迷你保險箱、Mofusand 是否全部就位。", tag: "監管鏈 B", urgent: true },
-                    { start: "17:30", end: "18:15", title: "證婚儀式：交付物資", desc: "儀式期間，確保保險箱與戒指準時安全交到新郎/花仔手中。", tag: "儀式護送" },
-                    { start: "18:15", end: "18:30", title: "提醒新郎換衫 & 搬拱門", desc: "提醒 Adrian 換晚宴禮服。與春雨共同指揮搬運花環拱門至迎賓處。" },
-                    { start: "18:45", end: "19:30", title: "貼身跟隨新郎 Adrian", desc: "作為伴郎貼身跟隨 Adrian，隨時打點並提供即時提醒。" },
-                    { start: "19:30", end: "20:00", title: "協助賓客入座", desc: "與 Willson 共同指引賓客進行入座安排。" },
-                    { start: "21:30", end: "22:45", title: "敬酒環節 Standby", desc: "敬酒環節前在席邊 Ready 支援。" },
-                    { start: "22:45", end: "23:15", title: "送客分流 / 優先執拾物資", desc: "協助維持送客秩序。送客後立刻優先清點收拾監管鏈 B 的關鍵物資。" },
-                    { start: "23:15", end: "23:30", title: "撤退：物資上花車", desc: "全體 Gentlemen 組成員協助將剩餘物資搬運至花車，圓滿收工！" }
+                    // 5月24日
+                    { date: "2026-05-24", start: "06:45", end: "07:20", title: "重要任務：為眾人叫早餐", desc: "負責為晨間準備的兄弟姊妹、化妝師及新人訂購並叫早餐送抵酒店房間。", tag: "貼身管家", materials: "早餐訂單、現金/電子支付" },
+                    { date: "2026-05-24", start: "07:20", end: "08:45", title: "領取酒店房卡", desc: "向 AQ 或 Joanne 處領取並收妥所有酒店房卡。", tag: "行政", materials: "出門房卡*2, AQ+Joanne房卡*2, Adrian+Wing房卡*2" },
+                    { date: "2026-05-24", start: "08:45", end: "09:00", title: "帶譚爸爸上出門房", desc: "使用房卡 Card 2 帶女方爸爸（譚爸爸）上出門房進行準備。", materials: "房卡 Card 2" },
+                    { date: "2026-05-24", start: "09:00", end: "09:30", title: "集合及行李搬運上花車", desc: "兄弟團集合，協助將新人的個人大件行李、衣物安全送上花車。" },
+                    { date: "2026-05-24", start: "09:30", end: "10:00", title: "拍攝兄弟團合照", desc: "於酒店樓下集合，配合攝影師拍攝兄弟團合照。" },
+                    { date: "2026-05-24", start: "11:15", end: "11:30", title: "【監管鏈 B】確保所有 Mofusand 公仔收拾", desc: "出門前【關鍵核對】確保所有 Mofusand 公仔已全部執拾妥當帶走，一隻都不能留在酒店房內！", tag: "公仔總管", urgent: true, materials: "所有 Mofusand 公仔" },
+                    { date: "2026-05-24", start: "11:30", end: "12:00", title: "出發前往男家 & 派利是", desc: "準備出發。關鍵動作：代表新郎派利是給花車司機。全程負責貼身、妥善保管好所有 Mofusand 物資。", tag: "貼身管家", materials: "花車司機利是、Mofusand物資" },
+                    { date: "2026-05-24", start: "12:00", end: "13:00", title: "「醫肚團隊」午餐時間", desc: "享用或協助處理順風圍兄弟姊妹團的午餐安排。" },
+                    { date: "2026-05-24", start: "13:00", end: "14:10", title: "Zone A 清理裝飾", desc: "與細佬、春雨、Willson 共同在 Zone A 清理嫲嫲屋企臨時拜神入門佈置，隨後爭取時間休息。" },
+                    { date: "2026-05-24", start: "14:10", end: "14:15", title: "協助物資搬運至接駁車", desc: "協助搬運相關拜神及入門物資到 27 座接駁車上。" },
+                    { date: "2026-05-24", start: "14:15", end: "15:00", title: "隨隊轉場出發前往 M+", desc: "登上車隊，隨大隊出發轉場前往 M+ 會場，注意隨身保管「監管鏈 B」物資。" },
+                    { date: "2026-05-24", start: "15:00", end: "15:05", title: "抵達 M+ 物資進場 & 私人物品寄存", desc: "全員協助將行李運送至餐廳「璞」，將個人隨身物品先放進新娘房保管。" },
+                    { date: "2026-05-24", start: "15:05", end: "16:00", title: "西九外影拍攝", desc: "貼身陪同新郎，參加西九文化區的戶外人像/兄弟團外影拍攝。" },
+                    { date: "2026-05-24", start: "16:00", end: "17:00", title: "迎賓 Set-up & 【監管鏈 B 終極盤點】", desc: "與春雨共同負責迎賓 Set-up（包括 Mofusand 擺放）。【最高警示】必須當場盤點確認：結婚證書套、誓詞卡、戒指、迷你保險箱悉數到位！", tag: "監管鏈 B", urgent: true, materials: "結婚戒指、迷你保險箱、結婚證書套、誓詞卡、Mofusand" },
+                    { date: "2026-05-24", start: "16:45", end: "17:00", title: "參加證婚總彩排", desc: "聽從 MC 指示與新人、伴娘及兄弟姊妹團進行證婚彩排。" },
+                    { date: "2026-05-24", start: "17:30", end: "18:15", title: "證婚儀式：戴超、進場及物資移交", desc: "進場時戴上太陽眼鏡，操作泡泡槍，結尾 Re-march in 擺 Ending Pose。儀式中，確保保險箱與戒指安全、準時、無誤地移交予新郎/花仔！", tag: "儀式護送", urgent: true, materials: "太陽眼鏡、泡泡槍、結婚戒指、保險箱" },
+                    { date: "2026-05-24", start: "18:15", end: "18:30", title: "提醒新郎換晚宴禮服 & 搬拱門", desc: "證婚完結，貼身提醒 Adrian 換晚宴衫。隨後與春雨共同指揮工作人員將花環拱門搬往晚宴迎賓處，確保名牌無損掛上。", materials: "拱門新人名牌、Adrian新衣物" },
+                    { date: "2026-05-24", start: "18:45", end: "19:30", title: "貼身跟隨新郎 Adrian", desc: "作為伴郎貼身跟隨 Adrian，隨時打點他的需求、遞水、整理儀容並提供即時提醒。" },
+                    { date: "2026-05-24", start: "19:30", end: "20:00", title: "協助賓客入座安排", desc: "與 Willson 共同引導賓客按照座位表快速就座，避免入口阻塞。", materials: "Seating Plan座位表" },
+                    { date: "2026-05-24", start: "20:00", end: "20:30", title: "晚宴 March-in：進場氣氛", desc: "晚宴 March-in 開始，於入口走廊兩旁企好，使用泡泡槍營造氣氛。", materials: "泡泡槍" },
+                    { date: "2026-05-24", start: "21:30", end: "22:45", title: "敬酒環節 Standby", desc: "敬酒環節前在席邊 Ready 支援新郎 Adrian。" },
+                    { date: "2026-05-24", start: "22:45", end: "23:15", title: "送客分流 & 【優先執拾監管鏈 B】", desc: "協助維持送客秩序。送客結束後，立刻「第一時間優先」清點、收拾、保管監管鏈 B 的所有儀式物資，放入新娘房或親自妥善寄存，絕不能遺留！", tag: "監管鏈 B", urgent: true, materials: "結婚證書、戒指盒、保險箱、誓言卡、Mofusand" },
+                    { date: "2026-05-24", start: "23:15", end: "23:30", title: "終極撤退：協助物資上花車", desc: "全體 Gentlemen 組成員協助將所有現場剩餘自攜物資搬到花車上，收工！" }
                 ]
             },
             ding: {
                 name: "丁丁",
                 title: "流程控管、全局控時與財物監督",
                 color: "rose",
-                tips: [
-                    "你是全日的「氣氛與傳統擔當」，敬茶時請預先熟悉吉祥語。",
-                    "18:00 及 19:00 兩輪小食供應，確保熱食準時新鮮上桌。"
-                ],
                 timeline: [
-                    { start: "10:45", end: "11:30", title: "敬茶吉祥說話 & Check-out", desc: "負責敬茶環節的「吉祥說話」。 Check-out 收集所有房卡（出門房*2, AQ+Joanne房*2, Adrian+Wing房*2）。", tag: "吉祥話/行政" },
-                    { start: "12:00", end: "13:00", title: "斟茶環節：吉祥說話", desc: "於順風圍劉家斟茶環節，負責帶動氣氛與講吉祥賀語。" },
-                    { start: "13:00", end: "14:05", title: "午餐與休息時間", desc: "於順風圍休息並享用午餐。" },
-                    { start: "14:05", end: "15:00", title: "Zone A 準備出發", desc: "於嫲嫲屋企準備轉場，協助確認現場狀況並引導人員上車。" },
-                    { start: "16:00", end: "17:00", title: "指揮迎賓、麻雀房設置 & 餐飲協調", desc: "全局控時。指揮迎賓 Set-up (先借屏風遮海味櫃等)。設置 6-8 張麻雀枱。確認 18:00 中式小食安排。", tag: "現場指揮" },
-                    { start: "17:00", end: "18:15", title: "安排賓客入座", desc: "與 Willson 負責主動引導並安排抵達的賓客入座。" },
-                    { start: "18:15", end: "18:30", title: "證婚後迎賓區調整", desc: "指揮場地工作人員移走屏風，完成證婚後的迎賓區佈置重整。" },
-                    { start: "18:30", end: "18:45", title: "監督第一輪中式小食", desc: "監督第一輪中式小食（共 15 打）準時新鮮供應賓客。" },
-                    { start: "18:45", end: "19:15", title: "Reception Standby 迎賓", desc: "於 Reception 當值招呼來賓。" },
-                    { start: "19:15", end: "19:30", title: "支援女家簽到", desc: "視乎現場女家簽到人手狀況，主動協助女家賓客。" },
-                    { start: "19:30", end: "20:30", title: "維持接待處運作", desc: "維持 Reception 工作，直到 20:30 首道菜上桌後入席。" },
-                    { start: "22:45", end: "23:05", title: "現場指示 & 送客引導", desc: "送客時提供引導，引導賓客前往接駁車位置。" },
-                    { start: "23:05", end: "23:15", title: "監管鏈 A：金器收集", desc: "【最高機密】與春、細佬共同收集劉媽媽的金器與人情袋，確保資產安全。", tag: "高風險任務", urgent: true }
+                    // 5月23日
+                    { date: "2026-05-23", start: "21:00", end: "22:00", title: "抵達如心酒店 Standby", desc: "抵達荃灣西如心酒店準備就緒，與 Amy 進行流程核對。" },
+                    { date: "2026-05-23", start: "22:00", end: "23:59", title: "兄弟任務：買糖水湯圓", desc: "前往購買糖水湯圓（3 碗，各 3 粒，需含生果）。", tag: "前哨補給", materials: "糖水湯圓 (3碗，含生果)" },
+                    // 5月24日
+                    { date: "2026-05-24", start: "09:00", end: "09:30", title: "集合及大件行李上車", desc: "協助將大件個人行李搬運上花車。" },
+                    { date: "2026-05-24", start: "09:30", end: "10:00", title: "拍攝兄弟團合照", desc: "於酒店樓下集合，配合攝影師拍攝兄弟團合照。" },
+                    { date: "2026-05-24", start: "10:45", end: "11:30", title: "敬茶吉祥話 & 【行政退房任務】", desc: "在敬茶環節負責帶動氣氛與「講吉祥說話」。【行政重任】在 11:30 前向各房收齊所有房卡辦理退房手續，交還酒店櫃檯。", tag: "傳統/行政", urgent: true, materials: "房卡*6（出門房*2, AQ+Jo房*2, Ad+Wing房*2）、吉祥賀語清單" },
+                    { date: "2026-05-24", start: "12:00", end: "13:00", title: "劉家斟茶環節：吉祥說話", desc: "於順風圍劉家斟茶入門儀式，擔任吉祥話擔當，熱烈帶動現場傳統氣氛。", tag: "傳統擔當", materials: "吉祥賀語清單" },
+                    { date: "2026-05-24", start: "13:00", end: "14:05", title: "午餐與休息時間", desc: "於 Zone B（叔叔屋企）稍作休息，享用午餐並為主會場作戰儲備精力。" },
+                    { date: "2026-05-24", start: "14:05", end: "15:00", title: "Zone A 準備出發轉場", desc: "於嫲嫲屋企準備轉場出發前往 M+，協助確認現場隨行人員與現場物資裝備。" },
+                    { date: "2026-05-24", start: "15:00", end: "16:00", title: "抵達 M+，全員搬物資", desc: "抵達 M+ 後，全員開工將物資車上的所有道具運送到餐廳「璞」。" },
+                    { date: "2026-05-24", start: "16:00", end: "17:00", title: "現場指揮：迎賓、麻雀房佈置 & 餐飲協調", desc: "全局控時。指揮迎賓 Set-up（特別督導先借屏風遮擋海味櫃、放置支柱、油畫畫架佈置等）。指揮 6-8 張麻雀枱設置。與場地協調，【關鍵】確認第一輪 15 打中式熱小食（芝麻卷、燒賣、蝦餃）於 18:00 準時熱騰騰供客。", tag: "現場指揮", urgent: true, materials: "屏風、畫架、中式小食單" },
+                    { date: "2026-05-24", start: "17:00", end: "17:30", title: "安排賓客入座", desc: "與 Willson 共同負責帶領並積極引導抵達的賓客入座。", materials: "座位表" },
+                    { date: "2026-05-24", start: "17:30", end: "18:15", title: "證婚儀式：戴超、操作泡泡槍", desc: "配合證婚進場與 Re-march in 陣型，佩戴太陽眼鏡，手持泡泡槍製造最佳浪漫氣氛！", materials: "太陽眼鏡、泡泡槍" },
+                    { date: "2026-05-24", start: "18:15", end: "18:30", title: "場地重整指揮", desc: "指揮場地工作人員移走迎賓位置屏風，重組迎賓區，準備晚宴迎賓佈置。", tag: "現場指揮" },
+                    { date: "2026-05-24", start: "18:30", end: "18:45", title: "餐飲小食監督", desc: "監督第一輪中式小食及飲品吧檯熱食準時、新鮮上桌供應賓客，保障賓客體驗。", materials: "芝麻卷、燒賣、蝦餃" },
+                    { date: "2026-05-24", start: "18:45", end: "19:30", title: "晚宴迎賓 Reception Standby", desc: "於 Reception 接待處當值招呼來賓。" },
+                    { date: "2026-05-24", start: "19:15", end: "19:30", title: "支援女家簽到", desc: "視乎現場女家簽到人手情況，彈性切換支援女家簽到。" },
+                    { date: "2026-05-24", start: "19:30", end: "20:30", title: "維持接待處運作直到上菜", desc: "維持接待處運作。最多留至 20:30 即可「收工」入席吃飯。" },
+                    { date: "2026-05-24", start: "20:00", end: "20:30", title: "晚宴 March-in 進場氣氛", desc: "晚宴 March-in 開始，於入口走廊兩旁企好，使用泡泡槍製造夢幻氣氛。", materials: "泡泡槍" },
+                    { date: "2026-05-24", start: "21:30", end: "22:45", title: "敬酒環節 Standby", desc: "敬酒環節前在席邊 Ready 支援走位。" },
+                    { date: "2026-05-24", start: "22:45", end: "23:05", title: "送客分流引導", desc: "送客開始，於現場提供引導指示，帶領賓客前往接駁車位置。" },
+                    { date: "2026-05-24", start: "23:05", end: "23:15", title: "【監管鏈 A】金器與人情安全收集", desc: "【最高機密】與春雨、細佬共同收集並清點劉媽媽的金器與人情袋（監管鏈 A），確保財物資產絕對安全，最終交給春雨移交劉媽媽。", tag: "高風險任務", urgent: true, materials: "劉媽媽金器、人情袋" },
+                    { date: "2026-05-24", start: "23:15", end: "23:30", title: "協助物資上花車", desc: "全體 Gentlemen 成員協助將剩餘物資搬運至花車，圓滿完成任務！" }
                 ]
             },
             willson: {
                 name: "Willson",
                 title: "後勤支援、場地清場與入座安排",
                 color: "indigo",
-                tips: [
-                    "你是晚宴主要的「入座指揮」，需事先熟悉座位表（Seating Plan）以引導賓客快速就座。",
-                    "全日多次搬運大型及重型物資，務必穿著便於活動的舒適鞋子。"
-                ],
                 timeline: [
-                    { start: "09:00", end: "10:55", title: "行李搬運上車", desc: "協助將個人行李及新人行李搬運至花車。" },
-                    { start: "10:55", end: "11:15", title: "酒店房清場", desc: "與春雨進行出門房清場。注意：只需清除新人佈置，酒店自帶物資不動。", tag: "清場專家" },
-                    { start: "11:15", end: "12:00", title: "協助物資搬運出發", desc: "協助搬運相關物資下樓上車，隨後向順風圍出發。" },
-                    { start: "12:00", end: "13:00", title: "「醫肚團隊」午餐安排", desc: "處理或享用順風圍工作人員午餐。" },
-                    { start: "13:00", end: "14:10", title: "清理拜神裝飾 & 休息", desc: "清理現場裝飾物資，隨後進行休息。" },
-                    { start: "14:10", end: "15:00", title: "物資搬運上接駁車", desc: "將拜神儀式所有自帶物資搬上 27座接駁車。" },
-                    { start: "15:00", end: "16:00", title: "M+ 物資進場 & 紅圈移除確認", desc: "抵達 M+，全員搬運物資進「璞」。與春雨確認紅圈標示裝飾是否已確實移除。", tag: "細節核對" },
-                    { start: "16:00", end: "17:00", title: "證婚位置 Set-up", desc: "與細佬在 Amy 指揮下進行證婚位置佈置與設置。" },
-                    { start: "17:00", end: "18:15", title: "安排賓客入座", desc: "與丁丁共同負責帶領並安排抵達的證婚來賓入座。" },
-                    { start: "18:15", end: "18:30", title: "搬運布藝 Backdrop", desc: "證婚後，與細佬將大型布藝 Backdrop 搬至迎賓位置並調整闊度。", tag: "重力擔當" },
-                    { start: "18:45", end: "19:30", title: "引導晚宴賓客入座", desc: "在晚宴迎賓期間，手持座位表負責精準引導賓客入座。", tag: "入座大腦" },
-                    { start: "19:30", end: "20:00", title: "維持入座安排運作", desc: "與 Wing 共同在入口處引導遲到或有特殊調整的賓客入座。" },
-                    { start: "20:30", end: "22:45", title: "入座任務完成", desc: "入座引導結束，可準備入席享用晚宴，期間待命支援。" },
-                    { start: "22:45", end: "23:15", title: "現場指示 & 送客引導", desc: "提供現場指示，引導賓客離場並指引前往接駁車。" },
-                    { start: "23:15", end: "23:30", title: "終極撤退：物資上花車", desc: "Gentlemen 組全員動身，將現場剩餘自攜物資全部搬到花車上。" }
+                    // 5月24日
+                    { date: "2026-05-24", start: "09:00", end: "09:30", title: "集合及行李搬運上花車", desc: "於酒店集合，協助將個人行李及新人行李搬運上花車。" },
+                    { date: "2026-05-24", start: "09:30", end: "10:00", title: "拍攝兄弟團合照", desc: "於酒店樓下集合，配合攝影師拍攝兄弟團合照。" },
+                    { date: "2026-05-24", start: "10:55", end: "11:15", title: "關鍵清場任務：出門房清場", desc: "與春雨進行「出門房」清場。注意：僅需清除新人自備佈置，酒店原有物品不能動，使用大垃圾袋進行整理收拾。", tag: "細節核對", materials: "大垃圾袋" },
+                    { date: "2026-05-24", start: "11:15", end: "11:30", title: "協助搬運物資出發", desc: "將清出物資搬到酒店大門，準備上客出發。" },
+                    { date: "2026-05-24", start: "12:00", end: "13:00", title: "「醫肚團隊」午餐安排", desc: "負責處理、分發或享用順風圍工作人員午餐。" },
+                    { date: "2026-05-24", start: "13:00", end: "14:10", title: "清理拜神裝飾 & 休息", desc: "與兄弟團清理拜神儀式現場裝飾與雜物物資，隨後進行休息，為下半場儲備精力。" },
+                    { date: "2026-05-24", start: "14:10", end: "15:00", title: "物資搬上 27座接駁車", desc: "協助將入門及拜神所有物資迅速、安全搬上 27 座接駁車上。" },
+                    { date: "2026-05-24", start: "15:00", end: "16:00", title: "抵達 M+ & 裝飾移除細節確認", desc: "抵達 M+ 後，全員協助將道具運送至餐廳「璞」，並寄存私人物品。與春雨【關鍵確認】紅圈標示裝飾是否已確實移除。", tag: "細節核對", materials: "紅圈裝飾移除圖" },
+                    { date: "2026-05-24", start: "16:00", end: "17:00", title: "證婚位置 Set-up", desc: "在總指揮 Amy 的協調下，與細佬共同負責將證婚區的所有座位及佈置擺放到位，並參加證婚總彩排。", tag: "佈置組", materials: "證婚座椅" },
+                    { date: "2026-05-24", start: "17:00", end: "17:30", title: "證婚引導：安排賓客入座", desc: "與丁丁負責手持證婚座位表，積極帶領賓客快速就座，防止入口通道阻塞。", tag: "入座大腦", urgent: true, materials: "證婚座位表" },
+                    { date: "2026-05-24", start: "17:30", end: "18:15", title: "證婚儀式：戴超、進場操作泡泡槍", desc: "與兄弟戰隊戴上太陽眼鏡，操作泡泡槍。結尾 Re-march in 同樣操作泡泡槍，營造最佳浪漫效果！", materials: "太陽眼鏡、泡泡槍" },
+                    { date: "2026-05-24", start: "18:15", end: "18:30", title: "搬運布藝 Backdrop", desc: "證婚完結，與細佬迅速配合，將 3m*3m 的巨大「布藝 Backdrop」安全搬往晚宴迎賓位置，並細心調整闊度。", tag: "重力擔當", materials: "布藝 Backdrop" },
+                    { date: "2026-05-24", start: "18:45", end: "19:30", title: "晚宴引導賓客入座", desc: "擔任晚宴主要的「入座指揮」，手持精細座位表（Seating Plan）引導賓客快速就位入座，確保入場流暢。", tag: "入座大腦", urgent: true, materials: "晚宴 Seating Plan" },
+                    { date: "2026-05-24", start: "19:30", end: "20:00", title: "維持入座安排運作", desc: "與 Wing 共同在入口通道處維持入座，引導遲到或有位置調整的賓客就座。", materials: "座位表" },
+                    { date: "2026-05-24", start: "20:00", end: "20:30", title: "晚宴 March-in：進場氣氛", desc: "晚宴進場開始，與兄弟姊妹團企好入口走廊兩旁，使用泡泡槍營造氣氛。", materials: "泡泡槍" },
+                    { date: "2026-05-24", start: "20:30", end: "21:30", title: "入座任務完成：準備入席", desc: "入座安排及迎賓任務完美結束，可以入席享用晚宴。" },
+                    { date: "2026-05-24", start: "21:30", end: "22:45", title: "敬酒環節 Standby", desc: "敬酒環節前於席邊 Ready 支援。" },
+                    { date: "2026-05-24", start: "22:45", end: "23:15", title: "送客分流引導", desc: "送客開始，手持指示牌在現場提供指示，引導賓客離場並指引前往接駁巴士位置。" },
+                    { date: "2026-05-24", start: "23:15", end: "23:30", title: "全員撤退：協助物資上花車", desc: "作為 Gentlemen 組的核心，協助清點並將現場剩餘物資全部搬到花車上。" }
                 ]
             }
         };
 
-        // Standard timing parameters
-        const WEDDING_DATE_STRING = "2026-05-24";
-        const START_TIME = new Date(`${WEDDING_DATE_STRING}T06:45:00+08:00`).getTime();
-        const END_TIME = new Date(`${WEDDING_DATE_STRING}T23:30:00+08:00`).getTime();
+        // Standard timeline parameters (Spans from May 23 21:00 to May 24 23:30)
+        const START_TIME = new Date("2026-05-23T21:00:00+08:00").getTime();
+        const END_TIME = new Date("2026-05-24T23:30:00+08:00").getTime();
         
         let currentCrew = localStorage.getItem('last_active_crew') || 'chun';
         let debugTimeOffset = 0;
@@ -305,13 +317,12 @@
 
         const dateFormatter = new Intl.DateTimeFormat('en-US', {
             timeZone: 'Asia/Hong_Kong',
-            year: 'numeric',
             month: '2-digit',
             day: '2-digit'
         });
 
-        function parseTaskTime(timeString) {
-            return new Date(`${WEDDING_DATE_STRING}T${timeString}:00+08:00`).getTime();
+        function parseTaskTime(dateStr, timeString) {
+            return new Date(`${dateStr}T${timeString}:00+08:00`).getTime();
         }
 
         // Switch Active Crew Profile
@@ -325,12 +336,9 @@
             });
             
             const activeBtn = document.getElementById(`crew-${crewKey}`);
-            const isRose = CREW_DATA[crewKey].color === 'rose';
-            
-            if (isRose) {
+            if (activeBtn) {
+                // Keep the premium Rose Theme as the primary color for the active status
                 activeBtn.className = "crew-btn shrink-0 px-4 py-2.5 text-xs font-black rounded-xl transition-all snap-start shadow-sm border bg-rose-600 text-white border-rose-600";
-            } else {
-                activeBtn.className = "crew-btn shrink-0 px-4 py-2.5 text-xs font-black rounded-xl transition-all snap-start shadow-sm border bg-indigo-600 text-white border-indigo-600";
             }
 
             renderTimeline();
@@ -344,14 +352,22 @@
             
             const data = CREW_DATA[currentCrew];
             
+            // Render May 23 tasks first, then May 24 tasks
+            let lastDate = "";
+            
             data.timeline.forEach((task, idx) => {
                 const isUrgent = task.urgent;
-                const borderClass = isUrgent ? 'border-rose-300 bg-rose-50/30' : 'border-slate-200 bg-white';
-                const tagEl = task.tag ? `<span class="text-[10px] bg-slate-100 text-slate-600 px-2 py-0.5 rounded-full font-medium">${task.tag}</span>` : '';
+                const tagEl = task.tag ? `<span class="text-[10px] bg-rose-50 text-rose-700 px-2 py-0.5 rounded-full font-bold border border-rose-100">${task.tag}</span>` : '';
+                const matEl = task.materials ? `
+                    <div class="mt-2 bg-red-50 border border-red-100 rounded-lg p-2 flex items-start gap-1.5">
+                        <i class="fa-solid fa-toolbox text-red-500 text-[10px] mt-0.5"></i>
+                        <span class="text-[10px] text-red-700 font-bold leading-none">攜帶/備忘：${task.materials}</span>
+                    </div>
+                ` : '';
                 
                 let timeRange = task.start;
                 if (task.end && task.start !== task.end) {
-                    const durationMins = (parseTaskTime(task.end) - parseTaskTime(task.start)) / 60000;
+                    const durationMins = (parseTaskTime(task.date, task.end) - parseTaskTime(task.date, task.start)) / 60000;
                     if (durationMins < 60) {
                         timeRange = `${task.start} - ${task.end}`;
                     } else {
@@ -359,8 +375,22 @@
                     }
                 }
 
+                // Render Day Divider
+                if (task.date !== lastDate) {
+                    const dayLabel = task.date === "2026-05-23" ? "5月23日 (星期六) 前哨戰" : "5月24日 (星期日) 大婚正日";
+                    container.insertAdjacentHTML('beforeend', `
+                        <div class="pt-2 pb-1 first:pt-0">
+                            <span class="bg-rose-950 text-white text-[10px] font-black px-2.5 py-1 rounded-full uppercase tracking-wider shadow-sm">
+                                ${dayLabel}
+                            </span>
+                        </div>
+                    `);
+                    lastDate = task.date;
+                }
+
                 const cardHtml = `
-                    <div class="task-card bg-white rounded-xl p-3.5 shadow-sm border transition-all duration-300 relative" 
+                    <div class="task-card bg-white rounded-xl p-3.5 shadow-sm border border-slate-200 transition-all duration-300 relative" 
+                         data-date="${task.date}"
                          data-start="${task.start}" 
                          data-end="${task.end}"
                          id="task-idx-${idx}">
@@ -373,6 +403,7 @@
                                 </div>
                                 <p class="text-xs text-slate-500 mt-1 leading-relaxed">${task.desc}</p>
                                 ${tagEl ? `<div class="mt-2 flex flex-wrap gap-1">${tagEl}</div>` : ''}
+                                ${matEl}
                             </div>
                         </div>
                     </div>
@@ -389,13 +420,13 @@
             const hkTimeString = timeFormatter.format(new Date(now));
             const hkDateString = dateFormatter.format(new Date(now));
             
-            const isWeddingDay = hkDateString === "05/24/2026";
-            
             // 1. Digital Clock
             if (isDebugMode) {
                 document.getElementById('live-clock').innerHTML = `<span class="text-rose-500">${hkTimeString}</span>`;
+                document.getElementById('clock-label').innerText = `模擬香港時間 (${hkDateString})`;
             } else {
                 document.getElementById('live-clock').innerText = hkTimeString;
+                document.getElementById('clock-label').innerText = `當前香港時間 (${hkDateString})`;
             }
 
             // 2. Real-time Progress Bar
@@ -412,31 +443,27 @@
             let activeTaskFound = false;
             let currentTaskName = "";
             
-            const activeCrewColor = CREW_DATA[currentCrew].color;
-            const bgClassActive = activeCrewColor === 'rose' ? 'bg-rose-500' : 'bg-indigo-600';
-            const borderClassActive = activeCrewColor === 'rose' ? 'border-rose-500' : 'border-indigo-500';
             const textClassActive = 'text-white';
+            const bgClassActive = 'bg-rose-500';
             
             const taskCards = document.querySelectorAll('.task-card');
             taskCards.forEach(card => {
-                const start = parseTaskTime(card.dataset.start);
-                const end = parseTaskTime(card.dataset.end);
+                const dateStr = card.dataset.date;
+                const start = parseTaskTime(dateStr, card.dataset.start);
+                const end = parseTaskTime(dateStr, card.dataset.end);
                 const timeBadge = card.querySelector('.time-badge');
 
                 // Clear previous active states
                 card.classList.remove('task-active');
-                timeBadge.classList.remove('bg-rose-500', 'bg-indigo-600', 'text-white');
+                timeBadge.classList.remove('bg-rose-500', 'text-white');
                 timeBadge.classList.add('bg-slate-100', 'text-slate-600');
 
-                if (isWeddingDay || isDebugMode) {
-                    if (now >= start && now < end) {
-                        card.classList.add('task-active');
-                        // Inject active style overrides depending on crew color
-                        timeBadge.classList.remove('bg-slate-100', 'text-slate-600');
-                        timeBadge.classList.add(bgClassActive, textClassActive);
-                        activeTaskFound = true;
-                        currentTaskName = card.querySelector('.task-title').innerText;
-                    }
+                if (now >= start && now < end) {
+                    card.classList.add('task-active');
+                    timeBadge.classList.remove('bg-slate-100', 'text-slate-600');
+                    timeBadge.classList.add(bgClassActive, textClassActive);
+                    activeTaskFound = true;
+                    currentTaskName = card.querySelector('.task-title').innerText;
                 }
             });
 
@@ -445,29 +472,23 @@
             const activePing = document.getElementById('active-ping');
             const statusText = document.getElementById('current-task-status');
 
-            if (!isWeddingDay && !isDebugMode) {
+            if (now < START_TIME) {
                 activeDot.className = "relative inline-flex rounded-full h-3 w-3 bg-slate-300";
                 activePing.classList.add('hidden');
                 statusText.innerText = "等待大日子降臨...";
                 statusText.className = "text-xs font-bold text-slate-400";
-            } else if (now < START_TIME) {
-                activeDot.className = "relative inline-flex rounded-full h-3 w-3 bg-amber-400";
-                activePing.classList.add('hidden');
-                statusText.innerText = "準備出發";
-                statusText.className = "text-xs font-bold text-amber-600";
             } else if (now >= END_TIME) {
                 activeDot.className = "relative inline-flex rounded-full h-3 w-3 bg-emerald-500";
                 activePing.classList.add('hidden');
                 statusText.innerText = "今日作戰順利，辛苦晒！";
                 statusText.className = "text-xs font-bold text-emerald-600";
             } else if (activeTaskFound) {
-                const dotColor = activeCrewColor === 'rose' ? 'bg-rose-600' : 'bg-indigo-600';
-                activeDot.className = `relative inline-flex rounded-full h-3 w-3 ${dotColor}`;
-                activePing.className = `animate-ping absolute inline-flex h-full w-full rounded-full ${activeCrewColor === 'rose' ? 'bg-rose-400' : 'bg-indigo-400'} opacity-75`;
+                activeDot.className = `relative inline-flex rounded-full h-3 w-3 bg-rose-600`;
+                activePing.className = `animate-ping absolute inline-flex h-full w-full rounded-full bg-rose-400 opacity-75`;
                 activePing.classList.remove('hidden');
                 
                 statusText.innerText = currentTaskName;
-                statusText.className = `text-xs font-black ${activeCrewColor === 'rose' ? 'text-rose-600' : 'text-indigo-600'} truncate max-w-[180px] text-right`;
+                statusText.className = `text-xs font-black text-rose-600 truncate max-w-[180px] text-right`;
             } else {
                 activeDot.className = "relative inline-flex rounded-full h-3 w-3 bg-blue-400";
                 activePing.classList.add('hidden');
@@ -486,17 +507,20 @@
             
             if (clickCount === 3) {
                 clickCount = 0;
-                const simulateTime = prompt("【除錯模式】輸入你想模擬嘅婚禮時間 (例如 09:30, 16:30, 22:45)\n取消可關閉除錯模式並重回真實時間:", "16:30");
-                if (simulateTime && simulateTime.includes(':')) {
-                    const targetTimestamp = parseTaskTime(simulateTime);
+                const simulateTime = prompt("【跨日除錯模式】請輸入你想模擬的日期與時間。\n格式: MM-DD HH:MM (例如 05-23 21:15 或 05-24 16:30)\n輸入空白或取消即可還原真實時間:", "05-24 16:30");
+                if (simulateTime && simulateTime.includes(' ') && simulateTime.includes(':')) {
+                    const [datePart, timePart] = simulateTime.split(' ');
+                    const fullDateStr = `2026-${datePart}`;
+                    const targetTimestamp = parseTaskTime(fullDateStr, timePart);
                     debugTimeOffset = targetTimestamp - new Date().getTime();
                     isDebugMode = true;
                     tick();
-                    alert(`已將時間模擬至 ${simulateTime}`);
+                    alert(`已成功模擬至 ${fullDateStr} ${timePart}`);
                 } else {
                     debugTimeOffset = 0;
                     isDebugMode = false;
-                    alert("除錯模式已關閉，恢復真實時間。");
+                    tick();
+                    alert("已關閉模擬，恢復當前真實時間。");
                 }
             }
         });
